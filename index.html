@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>佛乘修行進步表 v1.0.0</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .section { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; }
+        .score-board { position: sticky; top: 0; background: #fff; padding: 10px; border: 2px solid #333; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>佛乘修行進步表 v1.0.0</h1>
+<div class="score-board">當日總得分: <span id="totalScore">0</span> / 100</div>
+
+<div class="section">
+    <h3>每日功課 (滿分 50 分)</h3>
+    念佛(聲): <input type="number" id="nianfo" oninput="calculate()"> / 30000<br>
+    打坐(分): <input type="number" id="dazuo" oninput="calculate()"> / 120<br>
+    拜懺(分): <input type="number" id="baichan" oninput="calculate()"> / 60<br>
+    動禪(分): <input type="number" id="dongchan" oninput="calculate()"> / 60
+</div>
+
+<div class="section">
+    <h3>去習氣 (25項)</h3>
+    <div class="grid" id="habitsList"></div>
+</div>
+
+<div class="section">
+    <h3>修德大 (25項)</h3>
+    <div class="grid" id="virtuesList"></div>
+</div>
+
+<script>
+    const habits = ["改五點半起床","改咀嚼多次","改走不同路線","改核對三次","改換打扮","改不同動作","改說話方式","改看不同東西","改聽不同事物","改聞不同氣息","改吃不同飲食","改手機用途","培養閱讀","培養技能","學習不同事物","宇宙能吸收15分","減少攀比","減少購買慾","改不合群","改粗心大意","上班不開小差","不喝飲料零食","勤喝水","放水至少五次","走路不滑手機"];
+    const virtues = ["主動付出","清潔環境","陪伴家人","參與佛堂","發DM","助念","經書佈點","投稿","當義工","當助教","清淨念頭15秒","做有意義事","閱讀著作","找人來上課","點光明燈","佈施","工作賺錢","微笑","同理心","愛語","方便他人","幫助他人","修法五次","背誦六大心法","背誦法要序"];
+
+    function createCheckboxes(list, containerId) {
+        const container = document.getElementById(containerId);
+        list.forEach((item, index) => {
+            container.innerHTML += `<label><input type="checkbox" class="check-item" onchange="calculate()"> ${item}</label><br>`;
+        });
+    }
+
+    function calculate() {
+        // 功課計算 (50分比例)
+        const nianfo = Math.min(document.getElementById('nianfo').value / 30000, 1) * 12.5;
+        const dazuo = Math.min(document.getElementById('dazuo').value / 120, 1) * 12.5;
+        const baichan = Math.min(document.getElementById('baichan').value / 60, 1) * 12.5;
+        const dongchan = Math.min(document.getElementById('dongchan').value / 60, 1) * 12.5;
+        const homeworkScore = nianfo + dazuo + baichan + dongchan;
+
+        // 習氣與修德 (50項，每項1分)
+        const checked = document.querySelectorAll('.check-item:checked').length;
+        document.getElementById('totalScore').innerText = (homeworkScore + checked).toFixed(1);
+    }
+
+    createCheckboxes(habits, 'habitsList');
+    createCheckboxes(virtues, 'virtuesList');
+</script>
+</body>
+</html>
